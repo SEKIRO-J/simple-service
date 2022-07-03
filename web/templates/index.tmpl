@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+            rel="preload"
+            href="https://metapier-website.s3.amazonaws.com/server/fonts/Lexend-Black.ttf"
+            crossorigin="anonymous"
+            as="font"
+    />
+    <link
+            rel="preload"
+            href="https://metapier-website.s3.amazonaws.com/server/fonts/Lexend-Bold.ttf"
+            crossorigin="anonymous"
+            as="font"
+    />
+    <link
+            rel="preload"
+            href="https://metapier-website.s3.amazonaws.com/server/fonts/Lexend-ExtraBold.ttf"
+            crossorigin="anonymous"
+            as="font"
+    />
+    <link
+            rel="preload"
+            href="https://metapier-website.s3.amazonaws.com/server/fonts/Lexend-ExtraLight.ttf"
+            crossorigin="anonymous"
+            as="font"
+    />
+    <link
+            rel="preload"
+            href="https://metapier-website.s3.amazonaws.com/server/fonts/Lexend-Light.ttf"
+            crossorigin="anonymous"
+            as="font"
+    />
+    <link
+            rel="preload"
+            href="https://metapier-website.s3.amazonaws.com/server/fonts/Lexend-Medium.ttf"
+            crossorigin="anonymous"
+            as="font"
+    />
+    <link
+            rel="preload"
+            href="https://metapier-website.s3.amazonaws.com/server/fonts/Lexend-Regular.ttf"
+            crossorigin="anonymous"
+            as="font"
+    />
+    <link
+            rel="preload"
+            href="https://metapier-website.s3.amazonaws.com/server/fonts/Lexend-SemiBold.ttf"
+            crossorigin="anonymous"
+            as="font"
+    />
+    <link
+            rel="preload"
+            href="https://metapier-website.s3.amazonaws.com/server/fonts/Lexend-Thin.ttf"
+            crossorigin="anonymous"
+            as="font"
+    />
+    <link rel="preload" crossorigin="anonymous" as="script" href="https://metapier-website.s3.amazonaws.com/static/js/main.{{.MainVersionHash}}.js">
+    <title>Metapier</title>
+    <script>
+        var env = '{{.Env}}';
+        var priceFetchInterval = {{.PriceFetchInterval}};
+    </script>
+</head>
+<body>
+<div id="root"></div>
+
+    <script src="https://metapier-website.s3.amazonaws.com/static/js/main.{{.MainVersionHash}}.js"></script>
+    <script src="https://metapier-website.s3.amazonaws.com/static/js/vendors~main.{{.ChunkVersionHash}}.chunk.js"></script>
+
+</body>
+</html>

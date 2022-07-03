@@ -1,0 +1,90 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "volumes": [
+      {
+        "name": "metapier-backend",
+        "host": {
+          "sourcePath": "/var/app/current/metapier-backend"
+        }
+      },
+      {
+        "name": "flow-scanner-db",
+        "host": {
+          "sourcePath": "/var/app/current/flow-scanner-db"
+        }
+      }
+    ],
+    "containerDefinitions": [
+      {
+        "name": "metapier-backend",
+        "image": "340657407145.dkr.ecr.us-east-1.amazonaws.com/metapier-server:latest",
+        "environment": [
+          {
+            "name": "CONTAINER",
+            "value": "metapier-backend"
+          }
+        ],
+        "essential": true,
+        "memory": 128,
+        "portMappings": [
+            {
+              "hostPort": 80,
+              "containerPort": 8080
+            }
+          ]
+      }, {
+        "name": "flow-scanner",
+        "image": "340657407145.dkr.ecr.us-east-1.amazonaws.com/flow-scanner:latest",
+        "environment": [
+          {
+            "name": "FLOW_ACCESS_NODE",
+            "value": "https://access.testnet.nodes.onflow.org"
+          },
+          {
+            "name": "MAX_FLOW_REQUESTS_PER_SECOND",
+            "value": 1
+          },
+          {
+            "name": "CADENCE_EVENT_TYPES",
+            "value": "A.1289a1fa3305e59b.MetapierLaunchpad.NewPoolAdded,A.1289a1fa3305e59b.MetapierLaunchpad.UserClaimedLaunchToken,A.1289a1fa3305e59b.MetapierLaunchpad.UserWithdrewFunds,A.1289a1fa3305e59b.MetapierLaunchpad.UserDepositedFunds"
+          },
+          {
+            "name": "APP_LOG_TYPE",
+            "value": "pretty"
+          },
+          {
+            "name": "APP_LOG_LEVEL",
+            "value": "error"
+          },
+          {
+            "name": "SETTINGS_PROVIDER",
+            "value": "sqlite"
+          },
+          {
+            "name": "SQLITE_SETTINGS_FILE",
+            "value": "./data/settings.sqlite3"
+          },
+          {
+            "name": "HTTP_EVENT_BROADCASTER_ENDPOINT",
+            "value": "http://metapier-backend:8080/v1/events:batchCreate"
+          },
+          {
+            "name": "SQLITE_UNIQUE_CHECKER_FILE",
+            "value": "./data/unique.sqlite"
+          }
+        ],
+        "essential": true,
+        "memory": 128,
+        "links": [
+          "metapier-backend"
+        ],
+        "mountPoints": [
+          {
+            "sourceVolume": "flow-scanner-db",
+            "containerPath": "/home/node/app/data"
+          }
+        ]
+      }
+    ]
+  }
+  

@@ -1,0 +1,1 @@
+docker build -t metapier/server -f build/package/Dockerfile .
