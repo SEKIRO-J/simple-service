@@ -1,9 +1,8 @@
-module github.com/sekiro-j/metapierbackend
+module github.com/sekiro-j/simpleservice
 
 go 1.18
 
 require (
-	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.11.0
@@ -12,14 +11,12 @@ require (
 	google.golang.org/grpc v1.46.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
 	google.golang.org/protobuf v1.28.0
-	gorm.io/datatypes v1.0.6
 	gorm.io/driver/postgres v1.3.5
 	gorm.io/gorm v1.23.5
 )
 
 require (
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -49,6 +46,5 @@ require (
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
-	gorm.io/driver/mysql v1.3.2 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )

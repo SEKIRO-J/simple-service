@@ -1,1 +1,1 @@
-docker build -t metapier/server -f build/package/Dockerfile .
+docker build -t simpleservice/server -f build/package/Dockerfile .

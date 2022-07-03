@@ -10,18 +10,17 @@ import (
 
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/sekiro-j/metapierbackend/configs"
-	"github.com/sekiro-j/metapierbackend/internal/app"
-	"github.com/sekiro-j/metapierbackend/internal/db"
+	"github.com/sekiro-j/simpleservice/configs"
+	"github.com/sekiro-j/simpleservice/internal/app"
+	"github.com/sekiro-j/simpleservice/internal/db"
 
-	api "github.com/sekiro-j/metapierbackend/api/protos/v1"
+	api "github.com/sekiro-j/simpleservice/api/protos/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/unrolled/render"
 )
 
 var (
@@ -33,21 +32,6 @@ var (
 	swaggerPort = flag.Int("swagger-port", 3000, "swagger UI port")
 	swaggerPath = flag.String("swagger-assets-path", "./assets/swagger", "swagger UI assests path")
 )
-
-type Render struct {
-	render  *render.Render
-	client  api.MetaPierServiceClient
-	context context.Context
-	cfg     *configs.EnvConfig
-}
-
-type binding struct {
-	MainVersionHash    string
-	ChunkVersionHash   string
-	PriceFetchInterval string
-	Env                string
-	S3Path             string
-}
 
 func runSwaggerUI() error {
 	mux := http.NewServeMux()
@@ -75,38 +59,6 @@ func CORS(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (r *Render) renderHTML(w http.ResponseWriter, req *http.Request) {
-	CORS(w, req)
-
-	// default versions
-	version := "1"
-	priceFetchInterval := "10"
-	env := "dev"
-
-	// query for latest versions
-	femd, err := r.client.GetFEMD(r.context, &api.GetFEMDRequest{})
-	if err != nil {
-		log.Errorf("failed to fetch latest frontend metadata: %v", err)
-	} else {
-		version = femd.VersionHash
-		priceFetchInterval = femd.PriceFetchInterval
-		env = femd.Env
-	}
-
-	log.Infof("rendering html with versionHash: %v, priceFetchInterval: %v, env: %v\n", version, priceFetchInterval, env)
-	vh := strings.Split(version, "-")
-	mainVH := vh[0]
-	chunkVH := vh[1]
-	s3bucket := "metapier-website"
-	if r.cfg.Env == "production" {
-		s3bucket += "-prod"
-	}
-	s3path := s3bucket + ".s3.amazonaws.com/static/js"
-
-	binding := binding{MainVersionHash: mainVH, ChunkVersionHash: chunkVH, PriceFetchInterval: priceFetchInterval, Env: r.cfg.Network, S3Path: s3path}
-	r.render.HTML(w, http.StatusOK, "index", binding)
-}
-
 func runReverseProxy() error {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
@@ -116,33 +68,10 @@ func runReverseProxy() error {
 	// Note: Make sure the gRPC server is running properly and accessible
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	err := api.RegisterMetaPierServiceHandlerFromEndpoint(ctx, mux, fmt.Sprintf(":%d", *gsPort), opts)
+	err := api.RegisterSimpleServiceHandlerFromEndpoint(ctx, mux, fmt.Sprintf(":%d", *gsPort), opts)
 	if err != nil {
 		return err
 	}
-
-	// rpc client
-	conn, err := grpc.Dial(fmt.Sprintf(":%d", *gsPort), grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-
-	c := api.NewMetaPierServiceClient(conn)
-
-	envConfig, err := configs.LoadEnvConfig()
-	if err != nil {
-		log.Fatalf("failed to load env config: %v", err)
-	}
-
-	r := &Render{render.New(render.Options{
-		Directory: "web/templates",
-	}),
-		c,
-		ctx,
-		&envConfig,
-	}
-
-	http.HandleFunc("/", r.renderHTML)
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if strings.HasPrefix(req.URL.Path, "/v1") {
@@ -153,7 +82,7 @@ func runReverseProxy() error {
 	})
 
 	// Start HTTP server
-	log.Info("MetapierService http reverse proxy up")
+	log.Info("SimpleService http reverse proxy up")
 	return http.ListenAndServe(fmt.Sprintf(":%d", *gwPort), handler)
 }
 
@@ -173,9 +102,9 @@ func runServer(dbc *db.Connection) error {
 	}
 
 	grpcServer := grpc.NewServer(opts...)
-	api.RegisterMetaPierServiceServer(grpcServer, app.New(dbc))
+	api.RegisterSimpleServiceServer(grpcServer, app.New(dbc))
 
-	log.Info("MetapierService server up")
+	log.Info("SimpleService server up")
 	return grpcServer.Serve(lis)
 }
 

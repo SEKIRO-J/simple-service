@@ -3,16 +3,11 @@ package db
 import (
 	"fmt"
 
-	"github.com/sekiro-j/metapierbackend/internal/pkg/frontend"
-	"github.com/sekiro-j/metapierbackend/internal/pkg/shipyard"
-	"github.com/sekiro-j/metapierbackend/internal/pkg/token"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
 	log "github.com/sirupsen/logrus"
 )
-
-const delimiter string = "/"
 
 type Connection struct {
 	orm *gorm.DB
@@ -44,7 +39,6 @@ func New(cfg *DatabaseConfig) (*Connection, error) {
 	}
 
 	orm.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
-	orm.AutoMigrate(shipyard.Event{}, shipyard.Auction{}, shipyard.Project{}, token.Token{}, frontend.Metadata{})
 
 	return &Connection{
 		orm: orm,

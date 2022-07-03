@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package api.protos.v1;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+
+option go_package = "github.com/sekiro-j/simpleservice/api/protos/v1;simpleservicev1";
+
+option java_multiple_files = true;
+option java_package = "org.simpleservice";
+option java_outer_classname = "simpleServiceProto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    version: "1.0";
+  };
+  host: "localhost:8080";
+  schemes: HTTP;
+};
+
+service SimpleService {
+  rpc Echo(EchoRequest) returns (EchoResponse) {
+    option (google.api.http) = {
+        post: "/v1/echo"
+        body: "*"
+    };
+ }
+}
+
+message EchoRequest {
+  string msg = 1;
+}
+
+message EchoResponse {
+  string msg = 1;
+}

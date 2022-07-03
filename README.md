@@ -1,4 +1,4 @@
-# Metapier-Backend
+# SimpleService-Backend
 ## gRPC Server, reverse proxied by openapiv2-compliant gateway
 
 ## Local Dev
@@ -30,7 +30,7 @@ $ ./scripts/docker-build-run.sh
 ```
 Build Image
 ```
-$ docker build -t metapier/server -f build/package/Dockerfile .
+$ docker build -t simpleservice/server -f build/package/Dockerfile .
 or 
 $ ./scripts/image-gen.sh
 ```

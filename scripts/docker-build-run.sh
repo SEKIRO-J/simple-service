@@ -1,1 +1,1 @@
-docker run -p 3000:3000 --name metapier-server --rm -it $(docker build -q -t metapier/server -f build/package/Dockerfile .)
+docker run -p 3000:3000 --name simpleservice-server --rm -it $(docker build -q -t simpleservice/server -f build/package/Dockerfile .)
