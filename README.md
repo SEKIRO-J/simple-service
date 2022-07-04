@@ -1,6 +1,25 @@
 # SimpleService-Backend
 ## gRPC Server, reverse proxied by openapiv2-compliant gateway
 
+
+## APIs  
+List transactions of a address: `v1/{:address}/transaction`
+
+param: (currently only support bitcoin mainnet)
+```
+blockchain: bitcoin/ethereum/solana
+network: testnet/mainnet
+page_size: limit
+page_token: offset
+```
+
+Get balance of a address: `v1/{:address}/balance`
+param: (currently only support bitcoin mainnet)
+```
+blockchain: bitcoin/ethereum/solana
+network: testnet/mainnet
+```
+
 ## Local Dev
 Pre-Requisite
 ```
@@ -50,9 +69,4 @@ specific one called $name
 go test -run $name  ./...
 ```
 
-Generate Credentials
-```
-$ cd scripts
-$ ./createCred.sh
-```
 

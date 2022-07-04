@@ -28,6 +28,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 
 service SimpleService {
 
+  // Lists transactions of a address. Returns NOT_FOUND if the address does not exist.
   rpc ListTransactions(ListTransactionsRequest) returns (ListTransactionsResponse) {
     option (google.api.http) = {
       post: "/v1/{address=*}/transactions"
@@ -35,6 +36,7 @@ service SimpleService {
     };    
   }
 
+  // Gets balance of a address. Returns NOT_FOUND if the address does not exist.
   rpc GetBalance(GetBalanceRequest) returns (Balance) {
     option (google.api.http) = {
       post: "/v1/{address=*}/balance"
@@ -43,31 +45,48 @@ service SimpleService {
   }
 }
 
+// Request message for SimpleService.ListTransactions.
 message ListTransactionsRequest {
+  // The blockchain of the transactions to retrieve.
   string blockchain = 1;
+  // The address of the transactions to retrieve.
   string address = 2;
+  // The network of the transactions to retrieve.
   string network = 3;
+  // Requested page size. Server may return fewer books than requested.
+  // If unspecified, server will pick an appropriate default.
   optional int32 page_size =  4;
+  // A token identifying a page of results the server should return.
   optional int32 page_token = 5;
 }
 
+// Request message for SimpleService.ListTransactions.
 message GetBalanceRequest {
+  // The blockchain of the transactions to retrieve.
   string blockchain = 1;
+  // The address of the transactions to retrieve.
   string address = 2;
+  // The network of the transactions to retrieve.
   string network = 3;
 }
 
+// Response message for LibraryService.ListShelves.
 message ListTransactionsResponse {
   repeated Transaction transactions = 1 [(google.api.field_behavior) = UNORDERED_LIST];
 
   int32 next_page_token = 2;
 }
 
+// A transaction object
 message Transaction {
+  // The hash of the transaction.
   string hash = 1;
 }
 
+// A balance object
 message Balance {
+  // The quantity of balance currency.
   float final_balance = 1;
+  // The type of balance currency.
   string token = 2;
 }
