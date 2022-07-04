@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 
 	api "github.com/sekiro-j/simpleservice/api/protos/v1"
 	"github.com/sekiro-j/simpleservice/internal/db"
@@ -19,7 +20,7 @@ func New(dbc *db.Connection) *Server {
 }
 
 func (s *Server) ListTransactions(ctx context.Context, req *api.ListTransactionsRequest) (*api.ListTransactionsResponse, error) {
-	log.Info("Listing transactions")
+	log.Info(fmt.Sprintf("Listing transactions for address: %s", req.Address))
 	offset := int32(0)
 	limit := int32(50)
 
@@ -31,23 +32,33 @@ func (s *Server) ListTransactions(ctx context.Context, req *api.ListTransactions
 	}
 
 	param := &blockchain.GetAddressInfoParam{Addr: req.Address, Limit: &limit, Offset: &offset}
-	txs, err := blockchain.GetAddressInfo(param)
+	rawData, err := blockchain.GetAddressInfo(param)
 	if err != nil {
 		return nil, err
 	}
 
-	txPBs := getTransactions(txs)
+	txPBs := getTransactions(rawData)
 	nextPageToken := offset + limit
 
-	return &api.ListTransactionsResponse{Transactions: txPBs, NextPageToken: &nextPageToken}, nil
+	return &api.ListTransactionsResponse{Transactions: txPBs, NextPageToken: nextPageToken}, nil
 }
 
-func (s *Server) getBalance(ctx context.Context, req *api.GetBalanceRequest) (*api.Balance, error) {
+func (s *Server) GetBalance(ctx context.Context, req *api.GetBalanceRequest) (*api.Balance, error) {
+	log.Info(fmt.Sprintf("Getting balance for address: %s", req.Address))
+	offset := int32(0)
+	limit := int32(0)
 
+	param := &blockchain.GetAddressInfoParam{Addr: req.Address, Limit: &limit, Offset: &offset}
+	rawData, err := blockchain.GetAddressInfo(param)
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.Balance{FinalBalance: getBalance(rawData), Token: "BTC"}, nil
 }
 
-func getBalance(rawData *blockchain.TransactionsRawData) float64 {
-	return float64(rawData.FinalBalance / blockchain.BaseMultiplier)
+func getBalance(rawData *blockchain.TransactionsRawData) float32 {
+	return float32(rawData.FinalBalance / blockchain.BaseMultiplier)
 }
 
 func getTransactions(rawData *blockchain.TransactionsRawData) []*api.Transaction {

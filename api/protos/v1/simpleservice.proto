@@ -30,7 +30,7 @@ service SimpleService {
 
   rpc ListTransactions(ListTransactionsRequest) returns (ListTransactionsResponse) {
     option (google.api.http) = {
-      post: "/v1/transactions"
+      post: "/v1/{address=*}/transactions"
       body: "*"
     };    
   }
