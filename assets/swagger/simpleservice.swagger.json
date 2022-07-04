@@ -20,38 +20,6 @@
     "application/json"
   ],
   "paths": {
-    "/v1/transactions": {
-      "post": {
-        "operationId": "SimpleService_ListTransactions",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListTransactionsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1ListTransactionsRequest"
-            }
-          }
-        ],
-        "tags": [
-          "SimpleService"
-        ]
-      }
-    },
     "/v1/{address}/balance": {
       "post": {
         "operationId": "SimpleService_GetBalance",
@@ -89,6 +57,61 @@
                 },
                 "network": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "SimpleService"
+        ]
+      }
+    },
+    "/v1/{address}/transactions": {
+      "post": {
+        "operationId": "SimpleService_ListTransactions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListTransactionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "blockchain": {
+                  "type": "string"
+                },
+                "network": {
+                  "type": "string"
+                },
+                "pageSize": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "pageToken": {
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -137,28 +160,6 @@
         },
         "token": {
           "type": "string"
-        }
-      }
-    },
-    "v1ListTransactionsRequest": {
-      "type": "object",
-      "properties": {
-        "blockchain": {
-          "type": "string"
-        },
-        "address": {
-          "type": "string"
-        },
-        "network": {
-          "type": "string"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "pageToken": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
