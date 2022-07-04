@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SimpleServiceClient interface {
-	Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
+	ListTransactions(ctx context.Context, in *ListTransactionsRequest, opts ...grpc.CallOption) (*ListTransactionsResponse, error)
 }
 
 type simpleServiceClient struct {
@@ -33,9 +33,9 @@ func NewSimpleServiceClient(cc grpc.ClientConnInterface) SimpleServiceClient {
 	return &simpleServiceClient{cc}
 }
 
-func (c *simpleServiceClient) Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error) {
-	out := new(EchoResponse)
-	err := c.cc.Invoke(ctx, "/api.protos.v1.SimpleService/Echo", in, out, opts...)
+func (c *simpleServiceClient) ListTransactions(ctx context.Context, in *ListTransactionsRequest, opts ...grpc.CallOption) (*ListTransactionsResponse, error) {
+	out := new(ListTransactionsResponse)
+	err := c.cc.Invoke(ctx, "/api.protos.v1.SimpleService/ListTransactions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,15 +46,15 @@ func (c *simpleServiceClient) Echo(ctx context.Context, in *EchoRequest, opts ..
 // All implementations should embed UnimplementedSimpleServiceServer
 // for forward compatibility
 type SimpleServiceServer interface {
-	Echo(context.Context, *EchoRequest) (*EchoResponse, error)
+	ListTransactions(context.Context, *ListTransactionsRequest) (*ListTransactionsResponse, error)
 }
 
 // UnimplementedSimpleServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedSimpleServiceServer struct {
 }
 
-func (UnimplementedSimpleServiceServer) Echo(context.Context, *EchoRequest) (*EchoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Echo not implemented")
+func (UnimplementedSimpleServiceServer) ListTransactions(context.Context, *ListTransactionsRequest) (*ListTransactionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListTransactions not implemented")
 }
 
 // UnsafeSimpleServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -68,20 +68,20 @@ func RegisterSimpleServiceServer(s grpc.ServiceRegistrar, srv SimpleServiceServe
 	s.RegisterService(&SimpleService_ServiceDesc, srv)
 }
 
-func _SimpleService_Echo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EchoRequest)
+func _SimpleService_ListTransactions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTransactionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SimpleServiceServer).Echo(ctx, in)
+		return srv.(SimpleServiceServer).ListTransactions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.protos.v1.SimpleService/Echo",
+		FullMethod: "/api.protos.v1.SimpleService/ListTransactions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SimpleServiceServer).Echo(ctx, req.(*EchoRequest))
+		return srv.(SimpleServiceServer).ListTransactions(ctx, req.(*ListTransactionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -94,8 +94,8 @@ var SimpleService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*SimpleServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Echo",
-			Handler:    _SimpleService_Echo_Handler,
+			MethodName: "ListTransactions",
+			Handler:    _SimpleService_ListTransactions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

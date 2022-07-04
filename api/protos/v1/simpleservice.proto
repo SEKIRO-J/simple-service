@@ -27,18 +27,29 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service SimpleService {
-  rpc Echo(EchoRequest) returns (EchoResponse) {
+
+  rpc ListTransactions(ListTransactionsRequest) returns (ListTransactionsResponse) {
     option (google.api.http) = {
-        post: "/v1/echo"
-        body: "*"
-    };
- }
+      post: "/v1/transactions"
+      body: "*"
+    };    
+  }
 }
 
-message EchoRequest {
-  string msg = 1;
+message ListTransactionsRequest {
+  string blockchain = 1;
+  string address = 2;
+  string network = 3;
+  optional int32 page_size =  4;
+  optional int32 page_token = 5;
 }
 
-message EchoResponse {
-  string msg = 1;
+message ListTransactionsResponse {
+  repeated Transaction transactions = 1 [(google.api.field_behavior) = UNORDERED_LIST];
+
+  string next_page_token = 2;
+}
+
+message Transaction {
+  string hash = 1;
 }

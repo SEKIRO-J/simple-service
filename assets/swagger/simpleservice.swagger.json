@@ -20,14 +20,14 @@
     "application/json"
   ],
   "paths": {
-    "/v1/echo": {
+    "/v1/transactions": {
       "post": {
-        "operationId": "SimpleService_Echo",
+        "operationId": "SimpleService_ListTransactions",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1EchoResponse"
+              "$ref": "#/definitions/v1ListTransactionsResponse"
             }
           },
           "default": {
@@ -43,7 +43,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1EchoRequest"
+              "$ref": "#/definitions/v1ListTransactionsRequest"
             }
           }
         ],
@@ -81,18 +81,46 @@
         }
       }
     },
-    "v1EchoRequest": {
+    "v1ListTransactionsRequest": {
       "type": "object",
       "properties": {
-        "msg": {
+        "blockchain": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "network": {
+          "type": "string"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageToken": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "v1ListTransactionsResponse": {
+      "type": "object",
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Transaction"
+          }
+        },
+        "nextPageToken": {
           "type": "string"
         }
       }
     },
-    "v1EchoResponse": {
+    "v1Transaction": {
       "type": "object",
       "properties": {
-        "msg": {
+        "hash": {
           "type": "string"
         }
       }
