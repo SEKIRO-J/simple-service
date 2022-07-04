@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SimpleServiceClient interface {
 	ListTransactions(ctx context.Context, in *ListTransactionsRequest, opts ...grpc.CallOption) (*ListTransactionsResponse, error)
+	GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...grpc.CallOption) (*Balance, error)
 }
 
 type simpleServiceClient struct {
@@ -42,11 +43,21 @@ func (c *simpleServiceClient) ListTransactions(ctx context.Context, in *ListTran
 	return out, nil
 }
 
+func (c *simpleServiceClient) GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...grpc.CallOption) (*Balance, error) {
+	out := new(Balance)
+	err := c.cc.Invoke(ctx, "/api.protos.v1.SimpleService/GetBalance", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SimpleServiceServer is the server API for SimpleService service.
 // All implementations should embed UnimplementedSimpleServiceServer
 // for forward compatibility
 type SimpleServiceServer interface {
 	ListTransactions(context.Context, *ListTransactionsRequest) (*ListTransactionsResponse, error)
+	GetBalance(context.Context, *GetBalanceRequest) (*Balance, error)
 }
 
 // UnimplementedSimpleServiceServer should be embedded to have forward compatible implementations.
@@ -55,6 +66,9 @@ type UnimplementedSimpleServiceServer struct {
 
 func (UnimplementedSimpleServiceServer) ListTransactions(context.Context, *ListTransactionsRequest) (*ListTransactionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTransactions not implemented")
+}
+func (UnimplementedSimpleServiceServer) GetBalance(context.Context, *GetBalanceRequest) (*Balance, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBalance not implemented")
 }
 
 // UnsafeSimpleServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -86,6 +100,24 @@ func _SimpleService_ListTransactions_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SimpleService_GetBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBalanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SimpleServiceServer).GetBalance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.protos.v1.SimpleService/GetBalance",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SimpleServiceServer).GetBalance(ctx, req.(*GetBalanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SimpleService_ServiceDesc is the grpc.ServiceDesc for SimpleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -96,6 +128,10 @@ var SimpleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListTransactions",
 			Handler:    _SimpleService_ListTransactions_Handler,
+		},
+		{
+			MethodName: "GetBalance",
+			Handler:    _SimpleService_GetBalance_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

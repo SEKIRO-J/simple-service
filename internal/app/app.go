@@ -20,28 +20,29 @@ func New(dbc *db.Connection) *Server {
 
 func (s *Server) ListTransactions(ctx context.Context, req *api.ListTransactionsRequest) (*api.ListTransactionsResponse, error) {
 	log.Info("Listing transactions")
-	offset := 0
-	limit := 50
+	offset := int32(0)
+	limit := int32(50)
 
 	if req.PageSize != nil {
-		limit = req.PageSize
+		limit = *req.PageSize
 	}
-	if req.Offset != nil {
-		offset = req.Offset
+	if req.PageToken != nil {
+		offset = *req.PageToken
 	}
 
-	param := &blockchain.GetAddressInfoParam{Addr: req.Address, Limit: req.PageSize, Offset: req.PageToken}
+	param := &blockchain.GetAddressInfoParam{Addr: req.Address, Limit: &limit, Offset: &offset}
 	txs, err := blockchain.GetAddressInfo(param)
 	if err != nil {
 		return nil, err
 	}
 
 	txPBs := getTransactions(txs)
+	nextPageToken := offset + limit
 
-	return &api.ListTransactionsResponse{Transactions: txPBs, NextPageToken: offset + limit}, nil
+	return &api.ListTransactionsResponse{Transactions: txPBs, NextPageToken: &nextPageToken}, nil
 }
 
-func (s *Server) getBalance() {
+func (s *Server) getBalance(ctx context.Context, req *api.GetBalanceRequest) (*api.Balance, error) {
 
 }
 

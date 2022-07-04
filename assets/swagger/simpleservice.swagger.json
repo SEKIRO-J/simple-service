@@ -51,6 +51,53 @@
           "SimpleService"
         ]
       }
+    },
+    "/v1/{address}/balance": {
+      "post": {
+        "operationId": "SimpleService_GetBalance",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Balance"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "blockchain": {
+                  "type": "string"
+                },
+                "network": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "SimpleService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -78,6 +125,18 @@
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "v1Balance": {
+      "type": "object",
+      "properties": {
+        "finalBalance": {
+          "type": "number",
+          "format": "float"
+        },
+        "token": {
+          "type": "string"
         }
       }
     },
@@ -113,7 +172,8 @@
           }
         },
         "nextPageToken": {
-          "type": "string"
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

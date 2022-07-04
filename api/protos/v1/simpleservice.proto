@@ -34,6 +34,13 @@ service SimpleService {
       body: "*"
     };    
   }
+
+  rpc GetBalance(GetBalanceRequest) returns (Balance) {
+    option (google.api.http) = {
+      post: "/v1/{address=*}/balance"
+      body: "*"
+    };    
+  }
 }
 
 message ListTransactionsRequest {
@@ -44,12 +51,23 @@ message ListTransactionsRequest {
   optional int32 page_token = 5;
 }
 
+message GetBalanceRequest {
+  string blockchain = 1;
+  string address = 2;
+  string network = 3;
+}
+
 message ListTransactionsResponse {
   repeated Transaction transactions = 1 [(google.api.field_behavior) = UNORDERED_LIST];
 
-  string next_page_token = 2;
+  int32 next_page_token = 2;
 }
 
 message Transaction {
   string hash = 1;
+}
+
+message Balance {
+  float final_balance = 1;
+  string token = 2;
 }
