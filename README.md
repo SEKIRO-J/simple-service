@@ -20,6 +20,11 @@ blockchain: bitcoin/ethereum/solana
 network: testnet/mainnet
 ```
 
+## TODOs
+1. Support more blockchain and network.
+2. Implement in-memory cache to reduce api throttling.
+3. Return enriched transactions info based on needs.
+
 ## Local Dev
 Pre-Requisite
 ```
