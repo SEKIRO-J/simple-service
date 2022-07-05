@@ -22,8 +22,9 @@ network: testnet/mainnet
 
 ## TODOs
 1. Support more blockchain and network.
-2. Implement in-memory cache to reduce api throttling.
-3. Return enriched transactions info based on needs.
+2. Support more 3rd block explorer API to reduce api throttling.
+3. Implement in-memory cache to reduce api throttling.
+4. Return enriched transactions info based on needs.
 
 ## Local Dev
 Pre-Requisite
