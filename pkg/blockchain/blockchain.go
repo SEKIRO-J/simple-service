@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	BaseMultiplier        = 100000000
-	SingleAddressEndpoint = "https://blockchain.info/rawaddr/%s?"
+	BaseMultiplier        = float32(100000000)
+	SingleAddressEndpoint = "https://blockchain.info/rawaddr/%s"
 )
 
 type GetAddressInfoParam struct {
@@ -36,9 +36,8 @@ type Transaction struct {
 func GetAddressInfo(param *GetAddressInfoParam) (*TransactionsRawData, error) {
 	url := fmt.Sprintf(SingleAddressEndpoint, param.Addr)
 
-	log.Info(fmt.Sprintf("Calling blockchain.info endpoint: %s", url))
-
 	urlParam := fmt.Sprintf("?limit=%v&offset=%v", *param.Limit, *param.Offset)
+	log.Info(fmt.Sprintf("Calling blockchain.info endpoint: %s", url+urlParam))
 
 	c := &http.Client{
 		Transport: &http.Transport{
@@ -62,7 +61,7 @@ func GetAddressInfo(param *GetAddressInfoParam) (*TransactionsRawData, error) {
 		log.Error(err)
 		return nil, status.Error(codes.Internal, "unable to read response body")
 	}
-	log.Info(fmt.Printf("Body : %v", string(body)))
+	// log.Info(fmt.Printf("Body : %v", string(body)))
 
 	rawData := &TransactionsRawData{}
 	err = json.Unmarshal([]byte(body), rawData)

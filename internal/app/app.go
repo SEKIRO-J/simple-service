@@ -58,7 +58,8 @@ func (s *Server) GetBalance(ctx context.Context, req *api.GetBalanceRequest) (*a
 }
 
 func getBalance(rawData *blockchain.TransactionsRawData) float32 {
-	return float32(rawData.FinalBalance / blockchain.BaseMultiplier)
+	log.Info(fmt.Sprintf("raw final balance: %v", rawData.FinalBalance))
+	return float32(rawData.FinalBalance) / blockchain.BaseMultiplier
 }
 
 func getTransactions(rawData *blockchain.TransactionsRawData) []*api.Transaction {

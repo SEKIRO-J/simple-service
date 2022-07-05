@@ -22,7 +22,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SimpleServiceClient interface {
+	// Lists transactions of a address. Returns NOT_FOUND if the address does not exist.
 	ListTransactions(ctx context.Context, in *ListTransactionsRequest, opts ...grpc.CallOption) (*ListTransactionsResponse, error)
+	// Gets balance of a address. Returns NOT_FOUND if the address does not exist.
 	GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...grpc.CallOption) (*Balance, error)
 }
 
@@ -56,7 +58,9 @@ func (c *simpleServiceClient) GetBalance(ctx context.Context, in *GetBalanceRequ
 // All implementations should embed UnimplementedSimpleServiceServer
 // for forward compatibility
 type SimpleServiceServer interface {
+	// Lists transactions of a address. Returns NOT_FOUND if the address does not exist.
 	ListTransactions(context.Context, *ListTransactionsRequest) (*ListTransactionsResponse, error)
+	// Gets balance of a address. Returns NOT_FOUND if the address does not exist.
 	GetBalance(context.Context, *GetBalanceRequest) (*Balance, error)
 }
 

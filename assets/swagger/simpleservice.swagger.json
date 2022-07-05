@@ -21,7 +21,8 @@
   ],
   "paths": {
     "/v1/{address}/balance": {
-      "post": {
+      "get": {
+        "summary": "Gets balance of a address. Returns NOT_FOUND if the address does not exist.",
         "operationId": "SimpleService_GetBalance",
         "responses": {
           "200": {
@@ -40,26 +41,25 @@
         "parameters": [
           {
             "name": "address",
+            "description": "The address of the transactions to retrieve.",
             "in": "path",
             "required": true,
             "type": "string",
             "pattern": "[^/]+"
           },
           {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "blockchain": {
-                  "type": "string"
-                },
-                "network": {
-                  "type": "string"
-                }
-              }
-            }
+            "name": "blockchain",
+            "description": "The blockchain of the transactions to retrieve.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "network",
+            "description": "The network of the transactions to retrieve.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -68,7 +68,8 @@
       }
     },
     "/v1/{address}/transactions": {
-      "post": {
+      "get": {
+        "summary": "Lists transactions of a address. Returns NOT_FOUND if the address does not exist.",
         "operationId": "SimpleService_ListTransactions",
         "responses": {
           "200": {
@@ -87,34 +88,41 @@
         "parameters": [
           {
             "name": "address",
+            "description": "The address of the transactions to retrieve.",
             "in": "path",
             "required": true,
             "type": "string",
             "pattern": "[^/]+"
           },
           {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "blockchain": {
-                  "type": "string"
-                },
-                "network": {
-                  "type": "string"
-                },
-                "pageSize": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "pageToken": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
+            "name": "blockchain",
+            "description": "The blockchain of the transactions to retrieve.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "network",
+            "description": "The network of the transactions to retrieve.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "description": "Requested page size. Server may return fewer books than requested.\nIf unspecified, server will pick an appropriate default.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "description": "A token identifying a page of results the server should return.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "tags": [
@@ -156,12 +164,15 @@
       "properties": {
         "finalBalance": {
           "type": "number",
-          "format": "float"
+          "format": "float",
+          "description": "The quantity of balance currency."
         },
         "token": {
-          "type": "string"
+          "type": "string",
+          "description": "The type of balance currency."
         }
-      }
+      },
+      "title": "A balance object"
     },
     "v1ListTransactionsResponse": {
       "type": "object",
@@ -176,15 +187,18 @@
           "type": "integer",
           "format": "int32"
         }
-      }
+      },
+      "description": "Response message for LibraryService.ListShelves."
     },
     "v1Transaction": {
       "type": "object",
       "properties": {
         "hash": {
-          "type": "string"
+          "type": "string",
+          "description": "The hash of the transaction."
         }
-      }
+      },
+      "title": "A transaction object"
     }
   }
 }

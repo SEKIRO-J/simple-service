@@ -31,16 +31,14 @@ service SimpleService {
   // Lists transactions of a address. Returns NOT_FOUND if the address does not exist.
   rpc ListTransactions(ListTransactionsRequest) returns (ListTransactionsResponse) {
     option (google.api.http) = {
-      post: "/v1/{address=*}/transactions"
-      body: "*"
+      get: "/v1/{address=*}/transactions"
     };    
   }
 
   // Gets balance of a address. Returns NOT_FOUND if the address does not exist.
   rpc GetBalance(GetBalanceRequest) returns (Balance) {
     option (google.api.http) = {
-      post: "/v1/{address=*}/balance"
-      body: "*"
+      get: "/v1/{address=*}/balance"
     };    
   }
 }
